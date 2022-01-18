@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Einkaufliste</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script src="script/script.js"></script>
+</head>
+<body>
+<header>
+    <h1>Einkaufliste</h1>
+    <hr>
+</header>
+<main>
+    <section>
+        <div>
+            <form id="eingabe-user">
+                <label for="user-name" class="as-input-m">Wer:</label>
+                <input name="user-name" id="user-name" type="text"
+                       required   placeholder="Wer kauft ein?"  >
+            </form>
+        </div>
+
+        <div id="ausgabe" class="unsichtbar">
+            <h5>Einkaufsliste</h5>
+            <div id="create-save-user" class="unsichtbar">
+                <form id="besorgen" >
+                    <label for="besorgen">Besorgen:</label>
+                    <input type="submit" class="btn" value="neu">
+                    <input type="submit" class="btn" value="sichern">
+                </form>
+            </div>
+            <table id="shopping-table">
+                <thead id="shopping-thead">
+                <tr>
+                    <th class="wer-width" class="user-name">Wer</th>
+                    <th class="was-width" class="einkaeufe">Was</th>
+                    <th class="wo-width" class="ort">Wo</th>
+                    <th class="dat-with" class="datum">Datum</th>
+                </tr>
+                </thead>
+                <tbody id="shopping-tbody"></tbody>
+
+            </table>
+        </div>
+    </section>
+</main>
+<footer>
+    <hr>
+    <p><q>Einkaufliste</q> ist eine shopping Website </p>
+    <p>Autor: Sakdt</p>
+    <p>E-mail: Sakdt@web.de</p>
+    <p>www: www.sakdt.de</p>
+</footer>
+</body>
+</html>

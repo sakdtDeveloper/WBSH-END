@@ -1,0 +1,97 @@
+:root {
+    /* my document style*/
+    --as-font-01: sans-serif;
+    --as-bg-col-00: white;
+    --as-bg-col-01: lightgoldenrodyellow;
+    --as-col-offen: darksalmon;
+    --as-bg-tab-col: lightcyan;
+    --as-col-gehalten: lightgreen;
+    --as-col-hover-1: mistyrose;
+    --as-col-hover-2: lightpink;
+    --as-width: 100%;
+}
+
+* { /* all elements */
+    font-family: var(--as-font-01);
+    box-sizing: border-box; /* important for responsive design */
+}
+
+html {
+    width: var(--as-width);
+    background-color: var(--as-bg-col-00);
+
+}
+
+body {
+    padding: 10px;
+    background-color: var(--as-bg-col-01);
+
+}
+q{quotes:"\0022" "\0022";}
+
+main{
+    margin-bottom: 45px;
+}
+form{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+table{
+    width: 100%;
+    background-color: var(--as-bg-tab-col);
+    margin-bottom: 30px;
+}
+table, tr, th, td {
+    border-collapse: collapse;
+    vertical-align: text-top;
+}
+thead {
+    border-bottom: black;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    border-top: black;
+    border-top-width: 2px;
+    border-top-style: solid;
+    text-align: left;
+}
+tbody tr:hover {
+    background-color: var(--as-col-hover-1);
+}
+tbody td:hover {
+    background-color: var(--as-col-hover-2);
+}
+
+.as-width{
+    width: 100%;
+}
+
+.wer-width{
+    width: 15%;
+}
+.was-width{
+    width: 55%;
+}
+.wo-width{
+    width: 15%;
+}
+.dat-width{
+    width: 15%;
+}
+
+.unsichtbar{
+    display: none;
+}
+.sichtbar{
+    display: block;
+}
+.b-dot-line {
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+    border-bottom-color: black;
+}
+
+.as-button-0{
+    margin-top: 2px;
+    margin-left: 0px;
+    margin-bottom: 2px;
+}
