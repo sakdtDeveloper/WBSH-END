@@ -1,0 +1,54 @@
+### create
+POST http://localhost:3000/create
+Content-Type: application/json
+
+{
+  "name" : "Karl",
+  "ware" : "Käse,Rot Wein",
+  "ort" : "Paris",
+  "datum": "2021-12-11",
+  "status": 1
+}
+
+
+### read
+GET http://localhost:3000/read
+
+### read
+POST http://localhost:3000/read
+POST http://localhost:3000/update
+Content-Type: application/json
+
+{
+  "id" : 1
+}
+
+### update
+POST http://localhost:8080/update
+Content-Type: application/json
+
+{
+  "id_act" : 2,
+  "besitzer" : "Paula",
+  "aufgabe" : "Hausübung bearbeiten",
+  "datum": "2021-12-16"
+}
+
+### delete
+POST http://localhost:3000/delete
+Content-Type: application/json
+
+{
+  "id" : 2
+}
+
+### sichern
+GET http://localhost:3000/sichern
+
+
+
+
+
+
+
+

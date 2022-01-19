@@ -1,2 +1,1 @@
-[{"name":"Karl","ware":"Orangen, Trauben","ort":"Frankfurt","datum":"2021-12-11T00:00:00.000Z","status":1},
-  {"name":"Annie","ware":"Jeans, Sneakers","ort":"Kassel","datum":"2022-01-10T00:00:00.000Z","status":1}]
+[{"name":"Karl","ware":"Orangen, Trauben","ort":"Frankfurt","datum":"2021-12-11T00:00:00.000Z","status":2},{"name":"Annie","ware":"Jeans, Sneakers","ort":"Kassel","datum":"2022-01-10T00:00:00.000Z","status":2},{"name":"site","ware":"Riz","ort":"nanda","datum":"2022-01-19T00:00:00.000Z","status":2},{"name":"Karl","ware":"Käse","ort":"Paris","datum":"2022-01-19T00:00:00.000Z","status":1},{"name":"site","ware":"Riz","ort":"nanda","datum":"2022-01-19T00:00:00.000Z","status":2}]
