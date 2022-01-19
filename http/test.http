@@ -10,28 +10,42 @@ Content-Type: application/json
   "status": 1
 }
 
+### create
+POST http://localhost:3000/create
+Content-Type: application/json
 
-### read
+{
+  "name" : "Annie",
+  "ware" : "Rind,Weiße Wein",
+  "ort" : "Lollar",
+  "datum": "2021-12-11",
+  "status": 1
+}
+
+
+### getListInfos
 GET http://localhost:3000/read
 
-### read
+### findbyId
 POST http://localhost:3000/read
 POST http://localhost:3000/update
 Content-Type: application/json
 
 {
-  "id" : 1
+  "id" : 14
 }
 
-### update
-POST http://localhost:8080/update
+### ändern
+POST http://localhost:3000/update
 Content-Type: application/json
 
 {
-  "id_act" : 2,
-  "besitzer" : "Paula",
-  "aufgabe" : "Hausübung bearbeiten",
-  "datum": "2021-12-16"
+  "id" : 2,
+  "name" : "wolfgang",
+  "ware" : "Käse,Rot Wein",
+  "ort" : "München",
+  "datum": "2021-12-11"
+
 }
 
 ### delete

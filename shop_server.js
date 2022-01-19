@@ -46,7 +46,7 @@ var UserInfos = /** @class */ (function () {
     };
     UserInfos.getUsersStack = function () {
         // Rückgabe des vollständigen Stacks mit allen Einträgen
-        return UserInfos.stack.sort(function (a, b) { return b.id - a.id; });
+        return UserInfos.stack;
     };
     UserInfos.id_max = 0;
     UserInfos.stack = [];
@@ -84,7 +84,6 @@ var LogInfos = /** @class */ (function () {
 var logInfosFile_work = "log/db.json";
 var currentInfos = new Infos();
 fs.readFile(logInfosFile_work, "utf-8", function (err, InfosData) {
-    // Einlesen der letzten aktuellen LoP -----------------------------------------
     if (err) {
         // Wenn die Datei nicht existiert, wird eine neue Liste angelegt
         currentInfos.liste = [];
@@ -101,9 +100,9 @@ fs.readFile(logInfosFile_work, "utf-8", function (err, InfosData) {
     }
 });
 server.get("/read", function (req, res) {
-    // READ - Rückgabe der vollständigen LoP als HTML-tbody
-    var loP_aktuellLength = currentInfos.liste.length;
-    if (currentInfos === undefined) {
+    // READ - Rückgabe der vollständigen infos
+    var infos = currentInfos.liste.length;
+    if (infos === undefined) {
         res.status(404);
         res.send("LoP does not exist");
     }
@@ -117,14 +116,15 @@ server.get("/read", function (req, res) {
 function renderLoP(infos) {
     // Aufbereitung der aktuellen LoP als HTML-tbody
     var html = "";
-    for (var i in infos.liste) {
+    var sortedlist = infos.liste.sort(function (a, b) { return b.getID() - a.getID(); });
+    for (var i in sortedlist) {
         // Ein Element der LoP wird nur ausgegeben, wenn sein Status auf aktiv (1) steht.
-        if (infos.liste[i].getStatus() === 1) {
-            var id = infos.liste[i].getID();
-            var name_1 = infos.liste[i].name;
-            var ware = infos.liste[i].ware;
-            var ort = infos.liste[i].ort;
-            var datum = infos.liste[i].datum.toISOString().slice(0, 10);
+        if (sortedlist[i].getStatus() === 1) {
+            var id = sortedlist[i].getID();
+            var name_1 = sortedlist[i].name;
+            var ware = sortedlist[i].ware;
+            var ort = sortedlist[i].ort;
+            var datum = sortedlist[i].datum.toISOString().slice(0, 10);
             html += "<tr class='b-dot-line' data-user-id=" + id + ">";
             html += "<td class='click-value' data-purpose='user' data-user-id=" + id + ">" + name_1 + "</td>";
             html += "<td class='click-value' data-purpose='ware'data-user-id=" + id + " >" + ware + "</td>";
@@ -146,16 +146,22 @@ function sichern(infos, file) {
     }
     // Umwandeln des Objekts in einen JSON-String
     var logInfosJSON = JSON.stringify(logInfos);
-    // Schreiben des JSON-Strings der LoP in die Datei mit dem Pfadnamen "file"
-    fs.writeFileSync(file, logInfosJSON, function (err) {
+    fs.writeFile(file, logInfosJSON, function (err) {
         if (err)
             throw err;
     });
     return logInfosJSON;
 }
 server.get("/sichern", function (req, res) {
+    var x = Date.now();
+    var file = "./log/save" + x + ".json";
+    fs.writeFile(file, 'Learn Node FS module', function (err) {
+        if (err)
+            throw err;
+        console.log('File is created successfully.');
+    });
     // Sichern der aktuellen infos in die Datei db.json
-    sichern(currentInfos, logInfosFile_work);
+    sichern(currentInfos, file);
     res.status(200);
     res.send("Infos gesichert");
 });
@@ -206,7 +212,7 @@ server.post("/read", function (req, res) {
     var currentUser = currentInfos.getInfos(id);
     if (currentInfos === undefined || currentUser.getStatus() !== 1) {
         res.status(404);
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
     }
     else {
         // Rendern der aktuellen LoP
@@ -222,7 +228,7 @@ server.post("/delete", function (req, res) {
     var user = currentInfos.getInfos(id);
     if (user === undefined || user.getStatus() !== 1) {
         res.status(404);
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
     }
     else {
         user.setStatus(2);
@@ -231,7 +237,7 @@ server.post("/delete", function (req, res) {
         // Rendern der aktuellen LoP und Rückgabe des gerenderten Tabellenteils (tbody)
         var html_tbody = renderLoP(currentInfos);
         res.status(200);
-        res.send("Item " + id + " deleted");
+        res.send("User " + id + " deleted");
     }
 });
 // UPDATE - LoP-Eintrag ändern
@@ -245,7 +251,7 @@ server.post("/update", function (req, res) {
     var user = currentInfos.getInfos(id);
     if (user === undefined || user.getStatus() !== 1) {
         res.status(404);
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
     }
     else {
         user.name = name;
@@ -257,7 +263,7 @@ server.post("/update", function (req, res) {
         // Rendern der aktuellen LoP
         renderLoP(currentInfos);
         res.status(200);
-        res.send("Item " + id + " changed");
+        res.send("Item " + id + " updated");
     }
     // Rückgabe der Werte an den Client
 });

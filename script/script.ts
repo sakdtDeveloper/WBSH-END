@@ -1,13 +1,9 @@
 
-let username: string; // aktuelle Bearbeiterperson
+let username: string;
 let statusCreate: number = 0; // Status des Eingabemodus: 0 = offen, 1 = eingeben, 2 = ändern
 
 //333333333333333333333333333333333333333333333333333333333333333333333
 function renderInfos() {
-    /*
-     * Ausgabe der aktuellen LoP und Abschluss ausstehender Nutzer-Interaktionen.
-     * Alle Eingabefelder in der LoP-Tabelle werden gelöscht.
-     */
 
     // XMLHttpRequest aufsetzen und absenden ----------------------------------
     const request = new XMLHttpRequest();
@@ -20,16 +16,15 @@ function renderInfos() {
 
     request.onload=(event)=>{
 
-        // Eventhandler für das Lesen der aktuellen Tabelle vom Server
-        if (request.status === 200) { // Erfolgreiche Rückgabe
+
+        if (request.status === 200) {
             html = request.response;
 
 
             document.getElementById("shopping-tbody").innerHTML=html
 
             statusCreate = 0;  // Der Status 0 gibt die Bearbeitung aller Events frei.
-            // Die ausgegebene Tabelle im Browser entspricht jetzt dem aktuellen
-            // Stand.
+
         }
         else {
             console.log("Fehler bei der Übertragung", request.status);
@@ -49,17 +44,17 @@ function renderInfos() {
 //2222222222222222222222222222222222222222222222222222222222
 
 function init(event) {
-    /* Aufbau der Tabelle nach der Eingabe des Bearbeiters
-     */
+
+
     event.preventDefault();
     username = (document.getElementById("user-name") as HTMLInputElement).value;
 
 
-    // Freigabe der LoP-Ausgabe im HTML-Dokument
+
     document.getElementById("ausgabe").classList.remove("unsichtbar");
     document.getElementById("create-save-user").classList.remove("unsichtbar");
 
-    // Lesen der aktuellen Tabelle vom Server und Ausgabe in lop-tbody
+
     renderInfos();
 
 }
@@ -105,7 +100,7 @@ function  neuOrSichern(event){
     }
     if(command === "sichern"){
 
-        // XMLHttpRequest aufsetzen und absenden
+
         const request = new XMLHttpRequest();
 
         // Request starten
@@ -113,9 +108,8 @@ function  neuOrSichern(event){
         request.send()
 
         request.onload = (event) => {
-            // Eventhandler für das Lesen der aktuellen Tabellenzeile zum Ändern oder Löschen
-            // vom Server
-            if (request.status === 200) { // Erfolgreiche Rückgabe
+
+            if (request.status === 200) {
 
                 renderInfos();
 
@@ -148,7 +142,6 @@ function createUpdateDelete(event) {
     else if (command === "speichern") {
 
         // Der Status 1 sperrt die Bearbeitung anderer Events, die nicht zur
-        // Eingabe des neuen Users gehören
         if (statusCreate === 1) {
 
             const currentWare = event.target.parentElement[0].value;
@@ -203,6 +196,8 @@ function createUpdateDelete(event) {
                 const gparent = event.target.parentElement.parentElement;
                 const currentId = Number(event.target.getAttribute('data-user-id'));
 
+                console.log(currentId);
+
                 // XMLHttpRequest aufsetzen und absenden
                 const request = new XMLHttpRequest();
 
@@ -239,11 +234,11 @@ function createUpdateDelete(event) {
 
             }
 
-        } else if ( command === "löschen" || command === "delete" ) {
+        } else if ( command === "löschen" || command==="delete") {
 
 
 
-        if (statusCreate === 2) {
+        if (statusCreate === 2 || statusCreate===0) {
 
 
 
@@ -279,6 +274,8 @@ function createUpdateDelete(event) {
         }
 
         }
+
+
 
     else if(command=== "ändern" ){
 

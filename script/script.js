@@ -1,11 +1,7 @@
-var username; // aktuelle Bearbeiterperson
+var username;
 var statusCreate = 0; // Status des Eingabemodus: 0 = offen, 1 = eingeben, 2 = ändern
 //333333333333333333333333333333333333333333333333333333333333333333333
 function renderInfos() {
-    /*
-     * Ausgabe der aktuellen LoP und Abschluss ausstehender Nutzer-Interaktionen.
-     * Alle Eingabefelder in der LoP-Tabelle werden gelöscht.
-     */
     // XMLHttpRequest aufsetzen und absenden ----------------------------------
     var request = new XMLHttpRequest();
     var html = "";
@@ -13,13 +9,10 @@ function renderInfos() {
     request.open('GET', 'read');
     request.send();
     request.onload = function (event) {
-        // Eventhandler für das Lesen der aktuellen Tabelle vom Server
-        if (request.status === 200) { // Erfolgreiche Rückgabe
+        if (request.status === 200) {
             html = request.response;
             document.getElementById("shopping-tbody").innerHTML = html;
             statusCreate = 0; // Der Status 0 gibt die Bearbeitung aller Events frei.
-            // Die ausgegebene Tabelle im Browser entspricht jetzt dem aktuellen
-            // Stand.
         }
         else {
             console.log("Fehler bei der Übertragung", request.status);
@@ -28,14 +21,10 @@ function renderInfos() {
 }
 //2222222222222222222222222222222222222222222222222222222222
 function init(event) {
-    /* Aufbau der Tabelle nach der Eingabe des Bearbeiters
-     */
     event.preventDefault();
     username = document.getElementById("user-name").value;
-    // Freigabe der LoP-Ausgabe im HTML-Dokument
     document.getElementById("ausgabe").classList.remove("unsichtbar");
     document.getElementById("create-save-user").classList.remove("unsichtbar");
-    // Lesen der aktuellen Tabelle vom Server und Ausgabe in lop-tbody
     renderInfos();
 }
 //555555555555555555555555555555555555555555555555555555
@@ -70,15 +59,12 @@ function neuOrSichern(event) {
         }
     }
     if (command === "sichern") {
-        // XMLHttpRequest aufsetzen und absenden
         var request_1 = new XMLHttpRequest();
         // Request starten
         request_1.open('GET', 'sichern');
         request_1.send();
         request_1.onload = function (event) {
-            // Eventhandler für das Lesen der aktuellen Tabellenzeile zum Ändern oder Löschen
-            // vom Server
-            if (request_1.status === 200) { // Erfolgreiche Rückgabe
+            if (request_1.status === 200) {
                 renderInfos();
             }
             else { // Fehlermeldung vom Server
@@ -101,7 +87,6 @@ function createUpdateDelete(event) {
     }
     else if (command === "speichern") {
         // Der Status 1 sperrt die Bearbeitung anderer Events, die nicht zur
-        // Eingabe des neuen Users gehören
         if (statusCreate === 1) {
             var currentWare = event.target.parentElement[0].value;
             var currentOrt = event.target.parentElement.parentElement.nextSibling.childNodes[0].value;
@@ -145,6 +130,7 @@ function createUpdateDelete(event) {
             var parent_1 = event.target.parentElement;
             var gparent_1 = event.target.parentElement.parentElement;
             var currentId = Number(event.target.getAttribute('data-user-id'));
+            console.log(currentId);
             // XMLHttpRequest aufsetzen und absenden
             var request_3 = new XMLHttpRequest();
             request_3.open('POST', 'read');
@@ -171,7 +157,7 @@ function createUpdateDelete(event) {
         }
     }
     else if (command === "löschen" || command === "delete") {
-        if (statusCreate === 2) {
+        if (statusCreate === 2 || statusCreate === 0) {
             var currentId = Number(event.target.getAttribute('data-user-id'));
             // XMLHttpRequest aufsetzen und absenden
             var request_4 = new XMLHttpRequest();

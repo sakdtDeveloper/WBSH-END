@@ -2,6 +2,7 @@ import * as express from "express";  // express bereitstellen
 const fs = require('fs'); // Zugriff auf Dateisystem
 
 
+
 // Aktivierung des Servers
 const server = express();
 const serverPort: number = 3000;
@@ -71,7 +72,7 @@ class UserInfos{
 
     static getUsersStack(): UserInfos[] {
         // Rückgabe des vollständigen Stacks mit allen Einträgen
-        return UserInfos.stack.sort((a,b)=>b.id-a.id);
+        return UserInfos.stack;
     }
 
 }
@@ -126,7 +127,7 @@ const logInfosFile_work: string = "log/db.json";
 let currentInfos: Infos = new Infos();
 
 fs.readFile(logInfosFile_work, "utf-8", (err, InfosData) => {
-    // Einlesen der letzten aktuellen LoP -----------------------------------------
+
     if (err) {
         // Wenn die Datei nicht existiert, wird eine neue Liste angelegt
         currentInfos.liste = [];
@@ -145,13 +146,13 @@ fs.readFile(logInfosFile_work, "utf-8", (err, InfosData) => {
 
 
 server.get("/read", (req: express.Request, res: express.Response) => {
-    // READ - Rückgabe der vollständigen LoP als HTML-tbody
+    // READ - Rückgabe der vollständigen infos
 
 
-    const loP_aktuellLength = currentInfos.liste.length;
+    const infos = currentInfos.liste.length;
 
 
-    if (currentInfos === undefined) {
+    if (infos === undefined) {
         res.status(404)
         res.send("LoP does not exist");
 
@@ -167,14 +168,15 @@ function renderLoP(infos: Infos): string {
     // Aufbereitung der aktuellen LoP als HTML-tbody
 
     let html: string = "";
-    for (let i in infos.liste) {
+    const sortedlist=infos.liste.sort((a,b)=>b.getID()-a.getID())
+    for (let i in sortedlist) {
         // Ein Element der LoP wird nur ausgegeben, wenn sein Status auf aktiv (1) steht.
-        if (infos.liste[i].getStatus() === 1) {
-            let id = infos.liste[i].getID();
-            let name = infos.liste[i].name;
-            let ware = infos.liste[i].ware;
-            let ort = infos.liste[i].ort;
-            let datum = infos.liste[i].datum.toISOString().slice(0, 10);
+        if (sortedlist[i].getStatus() === 1) {
+            let id = sortedlist[i].getID();
+            let name = sortedlist[i].name;
+            let ware = sortedlist[i].ware;
+            let ort = sortedlist[i].ort;
+            let datum = sortedlist[i].datum.toISOString().slice(0, 10);
 
             html +="<tr class='b-dot-line' data-user-id=" +id + ">"
             html += "<td class='click-value' data-purpose='user' data-user-id=" +id + ">" + name + "</td>";
@@ -201,18 +203,30 @@ function sichern(infos:Infos, file: string):string{
     // Umwandeln des Objekts in einen JSON-String
     const logInfosJSON = JSON.stringify(logInfos);
 
-    // Schreiben des JSON-Strings der LoP in die Datei mit dem Pfadnamen "file"
-    fs.writeFileSync(file, logInfosJSON, (err) => {
+
+    fs.writeFile(file, logInfosJSON, (err) => {
         if (err) throw err;
 
     });
     return logInfosJSON;
 }
 
+
+
 server.get("/sichern", (req: express.Request, res: express.Response) => {
 
+    const x= Date.now()
+
+    const file:string= "./log/save"+x+".json";
+
+    fs.writeFile(file, 'Learn Node FS module', function (err) {
+        if (err) throw err;
+        console.log('File is created successfully.');
+    });
+
+
     // Sichern der aktuellen infos in die Datei db.json
-    sichern(currentInfos, logInfosFile_work);
+   sichern(currentInfos, file);
 
     res.status(200);
     res.send("Infos gesichert");
@@ -288,7 +302,7 @@ server.post("/read", (req: express.Request, res: express.Response) => {
 
     if (currentInfos === undefined || currentUser.getStatus() !== 1) {
         res.status(404)
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
 
     } else {
         // Rendern der aktuellen LoP
@@ -311,7 +325,7 @@ server.post("/delete", (req: express.Request, res: express.Response) => {
 
     if (user === undefined || user.getStatus() !== 1) {
         res.status(404)
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
     } else {
         user.setStatus(2);
 
@@ -321,7 +335,7 @@ server.post("/delete", (req: express.Request, res: express.Response) => {
         // Rendern der aktuellen LoP und Rückgabe des gerenderten Tabellenteils (tbody)
         const html_tbody = renderLoP(currentInfos)
         res.status(200);
-        res.send("Item " + id + " deleted");
+        res.send("User " + id + " deleted");
     }
 });
 
@@ -343,7 +357,7 @@ server.post("/update", (req: express.Request, res: express.Response) => {
 
     if (user === undefined || user.getStatus() !== 1) {
         res.status(404)
-        res.send("Item " + id + " does not exist");
+        res.send("Info " + id + " does not exist");
     } else {
         user.name = name;
         user.ware = ware;
@@ -356,7 +370,7 @@ server.post("/update", (req: express.Request, res: express.Response) => {
         // Rendern der aktuellen LoP
         renderLoP(currentInfos)
         res.status(200);
-        res.send("Item " + id + " changed");
+        res.send("Item " + id + " updated");
 
     }
     // Rückgabe der Werte an den Client
